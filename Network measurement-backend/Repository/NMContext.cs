@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Network_measurement_database.Model;
 using System;
 using System.Collections.Generic;
@@ -11,26 +12,31 @@ namespace Network_measurement_database.Repository
     public class NMContext:DbContext
     {
         public const string connectionString = "server=localhost;port=3306;user=root;password=Passw0rd;database=network_measurement";
-
-        public NMContext()
-        {
-        }
         public NMContext( DbContextOptions<NMContext> option): base(option)
         {
         }
-
-
-
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Measurement> Measurements { get; set; }
-        public virtual DbSet<MeasurementReport> MeasurementsReport { get; set; }
-
+        public NMContext()
+        {
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion);
             }
+        }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Measurement> Measurements { get; set; }
+        public virtual DbSet<MeasurementReport> MeasurementsReport { get; set; }
+    }
+    public class PanelChangerContextFactory : IDesignTimeDbContextFactory<NMContext>
+    {
+        public NMContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<NMContext>();
+            optionsBuilder.UseMySql(NMContext.connectionString, ServerVersion.AutoDetect(NMContext.connectionString));
+
+            return new NMContext(optionsBuilder.Options);
         }
     }
 }
