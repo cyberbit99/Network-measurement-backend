@@ -26,7 +26,7 @@ namespace Network_measurement_functions.Functions
             string username,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Get user function processed a request.");
 
             var user = _nMContext.Users.Where(x => x.Username == username);
 

@@ -11,6 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Network measurement-backend\Network measurement-database.csproj" />
+    <ProjectReference Include="..\Network measurement-PDFGenerator\Network measurement-PDFGenerator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

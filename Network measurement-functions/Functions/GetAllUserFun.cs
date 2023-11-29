@@ -23,7 +23,7 @@ namespace Network_measurement_functions.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "alluser")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Get all user function processed a request.");
 
             var allUser = _nMContext.Users;
 

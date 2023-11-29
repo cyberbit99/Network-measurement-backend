@@ -11,6 +11,7 @@ using Network_measurement_functions.Abstracts;
 using Network_measurement_database.Repository;
 using Network_measurement_database.Model;
 using System.Linq;
+using Network_measurement_functions.Requests;
 
 namespace Network_measurement_functions.Functions
 {
@@ -22,25 +23,35 @@ namespace Network_measurement_functions.Functions
 
         [FunctionName("CreateOrUpdateMeasurementFun")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "measurement/{measurementId}")] HttpRequest req,
-            int measurementId,
-            int typeId,
-            string data,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "cou/measurement")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Create or update mesurement function processed a request.");
 
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            Measurement data = JsonConvert.DeserializeObject<Measurement>(requestBody);
 
-            var measurement = _nMContext.Measurements.Where(x => x.MeasurementId.Equals(measurementId)).FirstOrDefault();
+            var measurement = _nMContext.Measurements.Where(x => x.MeasurementId.Equals(data.MeasurementId)).FirstOrDefault();
             if (measurement != null)
             {
-                measurement.MeasurementId = measurementId;
-                measurement.MeasuredData = data;
-                measurement.MeasurementTypeId = typeId;
+                measurement.MeasurementId = data.MeasurementId;
+                measurement.MeasuredData = data.MeasuredData;
+                measurement.MeasurementTypeId = data.MeasurementTypeId;
+                measurement.MeasurementReportId = data.MeasurementReportId;
             }
+            else
+            {
+                Measurement newmeasurement  = new Measurement();
+                newmeasurement.MeasuredData = data.MeasuredData;
+                newmeasurement.MeasurementTypeId = data.MeasurementTypeId;
+                newmeasurement.MeasurementReportId = data.MeasurementReportId;
 
+                _nMContext.Measurements.Add(newmeasurement);
 
-            return new OkObjectResult(measurement);
+            }
+            _nMContext.SaveChanges();
+
+            return new OkObjectResult("OK");
         }
     }
 }

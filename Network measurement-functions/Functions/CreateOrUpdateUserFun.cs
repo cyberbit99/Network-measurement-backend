@@ -7,29 +7,56 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Network_measurement_database.Model;
+using Network_measurement_database.Repository;
+using Network_measurement_functions.Abstracts;
+using System.Linq;
 
 namespace Network_measurement_functions.Functions
 {
-    public static class CreateOrUpdateUserFun
+    public class CreateOrUpdateUserFun:AFun
     {
+        public CreateOrUpdateUserFun(NMContext nMContext) : base(nMContext)
+        {
+        }
+
         [FunctionName("CreateOrUpdateUserFun")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "cou/user")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
+            log.LogInformation("Create or update user function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            User data = JsonConvert.DeserializeObject<User>(requestBody);
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            var user = _nMContext.Users.Where(x => x.UserId.Equals(data.UserId)).FirstOrDefault();
+            if (user != null)
+            {
+                user.UserEmail = data.UserEmail;
+                user.UserRoleId = data.UserRoleId;
+                user.Username = data.Username;
+                user.Password = data.Password;
+                user.Firstname = data.Firstname;
+                user.Lastname = data.Lastname;
+            }
+            else
+            {
+                User newitem = new User();
+                newitem.UserId = data.UserId;
+                newitem.UserRoleId = data.UserRoleId;
+                newitem.Username = data.Username;
+                newitem.Password = data.Password;
+                newitem.Firstname = data.Firstname;
+                newitem.Lastname = data.Lastname;
 
-            return new OkObjectResult(responseMessage);
+
+                _nMContext.Users.Add(newitem);
+
+            }
+            _nMContext.SaveChanges();
+
+            return new OkObjectResult("OK");
         }
     }
 }

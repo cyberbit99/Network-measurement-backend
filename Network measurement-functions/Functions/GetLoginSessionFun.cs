@@ -34,7 +34,7 @@ namespace Network_measurement_functions.Functions
 
             var user = _nMContext.Users.Where(x => x.Username == data.Email && x.Password == data.Password);
 
-            if (!user.Any())
+            if (user.Count() == 1)
             {
                 return new OkObjectResult(JsonConvert.SerializeObject( user ));
             }
