@@ -22,7 +22,7 @@ namespace Network_measurement_functions.Functions
 
         [FunctionName("GetUserFun")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/{username}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "getuser/{username}")] HttpRequest req,
             string username,
             ILogger log)
         {

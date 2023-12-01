@@ -21,7 +21,7 @@ namespace Network_measurement_functions.Functions
 
         [FunctionName("GetReportFun")]
         public  async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "report/{reportid}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "getreport/{reportid}")] HttpRequest req,
             int reportid,
             ILogger log)
         {
