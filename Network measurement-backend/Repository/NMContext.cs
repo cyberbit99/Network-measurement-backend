@@ -27,7 +27,7 @@ namespace Network_measurement_database.Repository
         }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Measurement> Measurements { get; set; }
-        public virtual DbSet<MeasurementReport> MeasurementsReport { get; set; }
+        public virtual DbSet<MeasurementReport> Measurement_Reports { get; set; }
     }
     public class PanelChangerContextFactory : IDesignTimeDbContextFactory<NMContext>
     {

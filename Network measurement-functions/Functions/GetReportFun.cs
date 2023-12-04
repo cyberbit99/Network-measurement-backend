@@ -21,15 +21,22 @@ namespace Network_measurement_functions.Functions
 
         [FunctionName("GetReportFun")]
         public  async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "getreport/{reportid}")] HttpRequest req,
-            int reportid,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "getreport/{userid}")] HttpRequest req,
+            int userid,
             ILogger log)
         {
             log.LogInformation("Get report function processed a request.");
 
-            var user = _nMContext.MeasurementsReport.Where(x => x.MeasurementReportId == reportid);
-
-            return new OkObjectResult(user);
+            var report = _nMContext.Measurement_Reports.Where(x => x.UserId == userid).ToList();
+            if (!report.Any())
+            {
+                return new OkObjectResult(null);
+            }
+            else
+            {
+                return new OkObjectResult(report);
+            }
+            
         }
     }
 }

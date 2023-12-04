@@ -13,8 +13,9 @@ namespace Network_measurement_functions
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            Console.WriteLine("🎉 Service Started 🎉");
-            Console.WriteLine("---------------------");
+            Console.WriteLine("+-----------------+");
+            Console.WriteLine("| Service Started |");
+            Console.WriteLine("+-----------------+");
 
             var connectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
             builder.Services.AddDbContext<NMContext>(

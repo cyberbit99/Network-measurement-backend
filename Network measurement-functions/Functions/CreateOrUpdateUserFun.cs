@@ -43,7 +43,6 @@ namespace Network_measurement_functions.Functions
             else
             {
                 User newitem = new User();
-                newitem.UserId = data.UserId;
                 newitem.UserRoleId = data.UserRoleId;
                 newitem.Username = data.Username;
                 newitem.Password = data.Password;

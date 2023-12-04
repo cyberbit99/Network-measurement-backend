@@ -8,7 +8,7 @@ namespace Network_measurement_database.Model
 {
     public partial class User
     {
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public string Username { get; set; }
         public string UserEmail { get; set; }
         public string Password { get; set; }

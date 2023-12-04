@@ -30,24 +30,28 @@ namespace Network_measurement_functions.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             MeasurementReport data = JsonConvert.DeserializeObject<MeasurementReport>(requestBody);
 
-            var report = _nMContext.MeasurementsReport.Where(x => x.MeasurementReportId.Equals(data.MeasurementReportId)).FirstOrDefault();
+            var report = _nMContext.Measurement_Reports.Where(x => x.MeasurementReportId.Equals(data.MeasurementReportId)).FirstOrDefault();
             if (report != null)
             {
                 report.MeasurementReportId = data.MeasurementReportId;
+                report.Name = data.Name;
+                report.Description = data.Description;
                 report.UserId = data.UserId;
-                report.StarDate = data.StarDate;
+                report.StartDate = data.StartDate;
                 report.FinishDate = data.FinishDate;
             }
             else
             {
                 MeasurementReport newitem = new MeasurementReport();
                 newitem.MeasurementReportId = data.MeasurementReportId;
+                newitem.Name = data.Name;
+                newitem.Description = data.Description;
                 newitem.UserId = data.UserId;
-                newitem.StarDate = data.StarDate;
+                newitem.StartDate = data.StartDate;
                 newitem.FinishDate = data.FinishDate;
 
 
-                _nMContext.MeasurementsReport.Add(newitem);
+                _nMContext.Measurement_Reports.Add(newitem);
 
             }
             _nMContext.SaveChanges();
