@@ -21,26 +21,34 @@ namespace Network_measurement_functions.Functions
         }
 
         [FunctionName("GetLoginSessionFun")]
-        public  async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "loginsession")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            
+
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             LoginData data = JsonConvert.DeserializeObject<LoginData>(requestBody);
+            try
+            {
+                var u = _nMContext.Users.Where(x => x.Username == data.Email && x.Password == data.Password);
+            }
+            catch (Exception)
+            {
 
+                return new NotFoundObjectResult("User not found");
+            }
             var user = _nMContext.Users.Where(x => x.Username == data.Email && x.Password == data.Password);
 
             if (user.Count() == 1)
             {
-                return new OkObjectResult(JsonConvert.SerializeObject( user ));
+                return new OkObjectResult(JsonConvert.SerializeObject(user));
             }
             else
             {
-                return new BadRequestObjectResult("User not found");
+                return new NotFoundObjectResult("User not found");
             }
 
 

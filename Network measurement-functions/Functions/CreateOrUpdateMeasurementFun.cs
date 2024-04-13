@@ -31,9 +31,10 @@ namespace Network_measurement_functions.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             Measurement data = JsonConvert.DeserializeObject<Measurement>(requestBody);
 
-            var measurement = _nMContext.Measurements.Where(x => x.MeasurementId.Equals(data.MeasurementId)).FirstOrDefault();
-            if (measurement != null)
+            if (data.MeasurementId != 0)
             {
+
+                var measurement = _nMContext.Measurements.Where(x => x.MeasurementId.Equals(data.MeasurementId)).FirstOrDefault();
                 measurement.MeasurementId = data.MeasurementId;
                 measurement.MeasuredData = data.MeasuredData;
                 measurement.MeasurementTypeId = data.MeasurementTypeId;

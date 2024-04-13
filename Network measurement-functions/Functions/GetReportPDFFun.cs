@@ -10,8 +10,9 @@ using Newtonsoft.Json;
 using Network_measurement_PDFGenerator;
 using System.Linq;
 using Network_measurement_functions.Requests;
-using PdfSharp.Pdf;
+using PdfSharpCore.Pdf;
 using System.Net.Http;
+using PdfSharpCore.Fonts;
 
 namespace Network_measurement_functions.Functions
 {

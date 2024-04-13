@@ -10,7 +10,7 @@ namespace Network_measurement_functions.Requests
     {
         public int MeasurementReportId { get; set; }
         public int UserId { get; set; }
-        public DateTime StarDate { get; set; }
-        public DateTime FinishDate { get; set; }
+        public DateTime? StarDate { get; set; }
+        public DateTime? FinishDate { get; set; }
     }
 }

@@ -1,14 +1,19 @@
-﻿using PdfSharp.Drawing;
-using PdfSharp.Pdf;
+﻿using PdfSharpCore.Drawing;
+using PdfSharpCore.Fonts;
+using PdfSharpCore.Pdf;
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing.Text;
+using PdfSharpCore.Utils;
 
 namespace Network_measurement_PDFGenerator
 {
+    //cseréld le ezt a szart egy dinktopdfre. az megoldja a bajodat
     public class PDFGenerator
     {
         public PDFGenerator() { }
@@ -30,19 +35,22 @@ namespace Network_measurement_PDFGenerator
                 return null;
             }
         }
-        public PdfDocument Generator() 
+        public PdfDocument Generator()
         {
+            GlobalFontSettings.FontResolver = new FontResolver();
+            var fontCollection = new InstalledFontCollection();
+            ;
             // Create a new PDF document
             using (PdfDocument document = new PdfDocument())
             {
                 // Add a page to the document
                 PdfPage page = document.AddPage();
                 XGraphics gfx = XGraphics.FromPdfPage(page);
-
+                XFontFamily xFont = new XFontFamily("Helvetica");
                 // Set font properties
-                XFont fontHeader = new XFont("Times New Roman", 20);
-                XFont fontDescription = new XFont("Times New Roman", 12);
-                XFont fontParagraph = new XFont("Times New Roman", 12);
+                XFont fontHeader = new XFont(xFont.Name, 20);
+                XFont fontDescription = new XFont("Helvetica", 12);
+                XFont fontParagraph = new XFont("Helvetica", 12);
 
                 // Draw centered header
                 string headerText = "Header Text";
@@ -62,7 +70,7 @@ namespace Network_measurement_PDFGenerator
 
                 // Draw numbered paragraphs
                 XPoint paragraphPosition = new XPoint(50, lineEnd.Y + 20);
-                for (int i = 1; i <= 5; i++)
+                for (int i = 1; i <= 500; i++)
                 {
                     string paragraphText = $" {i}: This is a sample sentence.";
                     gfx.DrawString(paragraphText, fontParagraph, XBrushes.Black, paragraphPosition);
@@ -70,10 +78,8 @@ namespace Network_measurement_PDFGenerator
                 }
 
                 // Save the document to a file
-                string filePath = "output.pdf";
+                string filePath = @"C:\Users\Admin\source\repos\Network measurement-backend\Network measurement-PDFGenerator\Reports\output.pdf";
                 document.Save(filePath);
-
-                Console.WriteLine($"PDF created successfully at: {filePath}");
 
                 // Open the generated PDF file
                 //Process.Start(filePath);
