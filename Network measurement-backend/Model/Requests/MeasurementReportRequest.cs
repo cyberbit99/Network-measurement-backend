@@ -1,11 +1,4 @@
-﻿using Network_measurement_database.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Network_measurement_functions.Requests
+﻿namespace Network_measurement_database.Model.Requests
 {
     public class MeasurementReportRequest
     {

@@ -9,17 +9,23 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Network_measurement_PDFGenerator;
 using System.Linq;
-using Network_measurement_functions.Requests;
-using PdfSharpCore.Pdf;
 using System.Net.Http;
-using PdfSharpCore.Fonts;
+using Network_measurement_database.Repository;
+using Network_measurement_functions.Abstracts;
+using QuestPDF.Fluent;
+using Network_measurement_database.Model.Requests;
+
 
 namespace Network_measurement_functions.Functions
 {
-    public static class GetReportPDFFun
+    public class GetReportPDFFun:AFun
     {
+        public GetReportPDFFun(NMContext nMContext) : base(nMContext)
+        {
+        }
+
         [FunctionName("GetReportPDFFun")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "getreportpdf")] HttpRequest req,
             ILogger log)
         {
@@ -39,9 +45,19 @@ namespace Network_measurement_functions.Functions
 
             if(pdf.Count() == 0)
             {
-                PdfDocument pdfDocument = Generator.Generator();
+                MeasurementReportRequest reportRequest = new MeasurementReportRequest();
+                reportRequest.MeasurementReportId = data.MeasurementReportId;
+                reportRequest.UserId = data.UserId;
+                reportRequest.StarDate = data.StarDate;
+                reportRequest.FinishDate = data.FinishDate;
+                reportRequest.Name = data.Name;
+                reportRequest.Description = data.Description;
 
-                byte[] pdfBytes = File.ReadAllBytes(pdfDocument.FullPath);
+                reportRequest.Data = _nMContext.Measurements.Where(x=> x.MeasurementReportId == reportRequest.MeasurementReportId).ToList();
+
+                string pdfDocument = Generator.Generator(reportRequest);
+
+                byte[] pdfBytes = File.ReadAllBytes(pdfDocument);
 
                 //adding bytes to memory stream
                 var dataStream = new MemoryStream(pdfBytes);
