@@ -62,8 +62,8 @@ namespace Network_measurement_functions.Functions
                 //adding bytes to memory stream
                 var dataStream = new MemoryStream(pdfBytes);
                 response.Content = new ByteArrayContent(pdfBytes);
-                response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
-                return new OkObjectResult(response);
+                //response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+                return new FileContentResult(pdfBytes,"application/pdf");
             }
             else
             {
