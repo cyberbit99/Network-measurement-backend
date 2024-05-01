@@ -34,7 +34,7 @@ namespace Network_measurement_functions.Functions
             MeasurementReportRequest data = JsonConvert.DeserializeObject<MeasurementReportRequest>(requestBody);
 
             //consts but not consts
-            string folderPath = @"C:\Users\Admin\source\repos\Network measurement-backend\Network measurement-PDFGenerator\Reports";
+            string folderPath = @"C:\Users\Admin\source\repos\Network measurement-backend\Network measurement-PDFGenerator\Reports\";
             HttpResponseMessage response = new HttpResponseMessage();
             PDFGenerator Generator = new PDFGenerator();
 
@@ -57,7 +57,7 @@ namespace Network_measurement_functions.Functions
 
                 string pdfDocument = Generator.Generator(reportRequest);
 
-                byte[] pdfBytes = File.ReadAllBytes(pdfDocument);
+                byte[] pdfBytes = File.ReadAllBytes(folderPath+pdfDocument);
 
                 //adding bytes to memory stream
                 var dataStream = new MemoryStream(pdfBytes);
@@ -73,7 +73,7 @@ namespace Network_measurement_functions.Functions
                 var dataStream = new MemoryStream(pdfBytes);
                 response.Content = new ByteArrayContent(pdfBytes);
                 response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
-                return new OkObjectResult(response);
+                return new FileContentResult(pdfBytes, "application/pdf");
             }
         }
     }

@@ -16,7 +16,7 @@ namespace Network_measurement_PDFGenerator
 
         public List<string> ReadAllPDF()
         {
-            string folderPath = @"C:\Users\Admin\source\repos\Network measurement-backend\Network measurement-PDFGenerator\Reports";
+            string folderPath = @"C:\Users\Admin\source\repos\Network measurement-backend\Network measurement-PDFGenerator\Reports\";
 
             // Check if the folder exists
             if (Directory.Exists(folderPath))
@@ -58,6 +58,7 @@ namespace Network_measurement_PDFGenerator
                         foreach (var measurement in measurements)
                         {
                             column.Spacing(20);
+
                             column.Item().Element(container => ComposeMeasurement(container, measurement));
                         }
                     });
